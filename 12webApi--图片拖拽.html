@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			img {
+				width: 100px;
+				position: absolute;
+			}
+		</style>
+	</head>
+	<body>
+		<img src="xn.png" alt="" />
+	</body>
+	<script type="text/javascript">
+		
+		var oImg = document.getElementsByTagName("img");
+		//在图片身上按下鼠标
+		oImg[0].onmousedown = function(ev){
+			
+			ev = ev || event;
+			if(ev.preventDefault) {// 标准浏览器下阻止默认行为
+				ev.preventDefault();
+			}
+			
+			ev.returnValue&&(ev.returnValue = false);  // 短路写法
+			
+			
+			//  获取那个固定距离 （按下的鼠标的位置距离图片的边缘的左侧偏移量和顶部偏移量）
+			
+			// 让图片设置全部捕获（将鼠标的焦点放置在图片上面 从而达到取消图片的默认行为）
+			oImg[0].setCapture&&oImg[0].setCapture();
+			
+			var disX = ev.clientX - this.offsetLeft;
+			var disY = ev.clientY - this.offsetTop;
+			
+			//在整个文档下 添加鼠标移动事件
+			document.onmousemove = function(ev) {
+				ev = ev || event;
+				
+				// 要让img 跟着我的鼠标走了  
+				oImg[0].style.left = ev.clientX - disX + "px";
+				oImg[0].style.top = ev.clientY - disY + "px";
+			}
+			
+			// 鼠标弹起 取消事件
+			document.onmouseup = function() {
+				document.onmousemove = null;
+				// 让图片释放全局捕获
+				oImg[0].releaseCapture&&oImg[0].releaseCapture();
+			}
+			
+			
+			// 取消一下图片的默认行为
+			//return false;  //  它是一个普通的取消默认行为的方法  标准下 取消默认行为的方式是
+		}
+		
+	</script>
+</html>
